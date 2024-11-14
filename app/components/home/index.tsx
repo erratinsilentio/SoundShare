@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem("darkMode") === "true";
