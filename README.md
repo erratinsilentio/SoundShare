@@ -44,7 +44,7 @@
 
 # SoundShare
 
-### About
+## ⚜️ About
 
 **SoundShare** is a simple web app built with Next.js that allows users to upload music files and quickly generate a shareable link to the file. The app leverages modern web technologies to provide a clean and smooth experience for uploading and sharing music.
 
@@ -55,14 +55,14 @@
 > - Upload History
 > - Version Control
 
-### Features
+### ⚛︎ Features
 
 - Upload music files (MP3, WAV, etc.) with ease.
 - Receive a unique URL to share the uploaded file.
 - Sleek UI with responsive design, optimized for desktop and mobile.
 - Elegant animations for a smooth user experience.
 
-### Tech Stack
+### ⚛︎ Tech Stack
 
 - **Next.js** – React framework for building the app.
 - **Tailwind CSS** – Utility-first CSS framework for fast and efficient styling.
@@ -71,9 +71,9 @@
 - **Lucide React** – A set of customizable icons for a clean, modern UI.
 - **shadcn/ui** – Component library for UI elements.
 
-## Installation
+## 💿 Installation
 
-### Prerequisites
+### ❕ Prerequisites
 
 To run SoundShare locally, you’ll need to have the following tools installed:
 
@@ -125,7 +125,7 @@ yarn dev
 
 The app should now be running on http://localhost:3000.
 
-## Usage
+## ⚙️ Usage
 
 ##### 1. Upload a Music File
 
@@ -140,19 +140,19 @@ Once the file is uploaded, the app will generate a unique URL for your file. You
 
 The link will lead to a page where others can listen to the uploaded music file directly in their browser.
 
-## Design & Animations
+## ⚡️ Design & Animations
 
 The app uses **Framer Motion** for smooth transitions and animations, such as fading in elements and animating the upload progress. This helps make the file upload and user interactions feel fluid and dynamic.
 
 The UI is styled with **Tailwind CSS**, allowing for a minimal yet flexible design that adapts well to both desktop and mobile screens.
 
-### Components
+### 📦 Components
 
 - **File Upload** – Main component that handles the file input and upload process.
 - **Shareable Link** – Displays the link once the file is uploaded, allowing the user to copy it.
 - **Loader & Progress Bar** – Displays upload progress using an animated progress bar.
 
-## Deployment
+## 🌎 Deployment
 
 You can deploy SoundShare using platforms such as Vercel, Netlify, or any platform that supports Next.js. Here’s a quick guide for deploying to Vercel:
 
@@ -163,17 +163,17 @@ You can deploy SoundShare using platforms such as Vercel, Netlify, or any platfo
 
 > Once deployed, make sure to set the same environment variables (`UPLOADTHING_TOKEN`) in your Vercel project settings.
 
-## Contributing
+## 🛠 Contributing
 
 Feel free to fork this repository and create a pull request if you’d like to contribute improvements, bug fixes, or new features. Please ensure your code follows the existing style.
 
-### Steps to contribute:
+### 🫵 Steps to contribute:
 
 1. Fork the repo and clone it to your machine.
 2. Create a new branch for your feature or bug fix.
 3. Make your changes and run application to ensure everything is working as expected.
 4. Submit a pull request with a description of the changes.
 
-## License
+## 🖤 License
 
 This project is licensed under the GNU License. See the LICENSE file for more details.
