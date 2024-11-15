@@ -13,7 +13,7 @@ export default function ListenPage(props: {
     name?: string;
   }>;
 }) {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const searchParams = useSearchParams();
   const key = searchParams.get("key");
   const songName = searchParams.get("name");
