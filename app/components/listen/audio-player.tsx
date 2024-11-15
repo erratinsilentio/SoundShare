@@ -10,6 +10,7 @@ import {
 import { AudioWaveform } from "./audio-waveform";
 import { ShareLink } from "./share-link";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 
 interface AudioPlayerProps {
   darkMode: boolean;
@@ -99,50 +100,59 @@ export const AudioPlayer = ({
   };
 
   return (
-    <Card
-      className={`w-full max-w-md ${darkMode ? "bg-zinc-800 text-white" : ""}`}
+    <motion.div
+      className="relative z-10"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <CardHeader>
-        <CardTitle>{isTrackLoaded ? songName : "No Track Loaded"}</CardTitle>
-        <CardDescription className={darkMode ? "text-gray-300" : ""}>
-          {isTrackLoaded
-            ? "Your uploaded track"
-            : "Upload a track to start listening"}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {isTrackLoaded && (
-          <audio
-            ref={audioRef}
-            src={songUrl}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-          />
-        )}
-        <AudioWaveform
-          audioBuffer={audioBuffer}
-          currentTime={currentTime}
-          duration={duration}
-          darkMode={darkMode}
-          isTrackLoaded={isTrackLoaded}
-          onPositionChange={handlePositionChange}
-        />
-        <div className="flex justify-between items-center">
-          <Button
-            onClick={togglePlayPause}
-            variant="outline"
-            disabled={!isTrackLoaded}
-          >
-            {isPlaying ? "Pause" : "Play"}
-          </Button>
-          <div>
+      <Card
+        className={`w-full max-w-md ${
+          darkMode ? "bg-zinc-800 text-white" : ""
+        }`}
+      >
+        <CardHeader>
+          <CardTitle>{isTrackLoaded ? songName : "No Track Loaded"}</CardTitle>
+          <CardDescription className={darkMode ? "text-gray-300" : ""}>
             {isTrackLoaded
-              ? `${formatTime(currentTime)} / ${formatTime(duration)}`
-              : "0:00 / 0:00"}
+              ? "Your uploaded track"
+              : "Upload a track to start listening"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {isTrackLoaded && (
+            <audio
+              ref={audioRef}
+              src={songUrl}
+              onTimeUpdate={handleTimeUpdate}
+              onLoadedMetadata={handleLoadedMetadata}
+            />
+          )}
+          <AudioWaveform
+            audioBuffer={audioBuffer}
+            currentTime={currentTime}
+            duration={duration}
+            darkMode={darkMode}
+            isTrackLoaded={isTrackLoaded}
+            onPositionChange={handlePositionChange}
+          />
+          <div className="flex justify-between items-center">
+            <Button
+              onClick={togglePlayPause}
+              variant="outline"
+              disabled={!isTrackLoaded}
+            >
+              {isPlaying ? "Pause" : "Play"}
+            </Button>
+            <div>
+              {isTrackLoaded
+                ? `${formatTime(currentTime)} / ${formatTime(duration)}`
+                : "0:00 / 0:00"}
+            </div>
           </div>
-        </div>
-        <ShareLink darkMode={darkMode} shareUrl={songUrl} />
-      </CardContent>
-    </Card>
+          <ShareLink darkMode={darkMode} shareUrl={songUrl} />
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };

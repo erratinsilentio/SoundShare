@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
-import { Header } from "./header";
+import { Header } from "../layout/header";
 import { AudioPlayer } from "./audio-player";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "../layout/theme-toggle";
+import { Footer } from "../layout/footer";
 
 export default function ListenPage(props: {
   searchParams?: Promise<{
@@ -40,30 +40,9 @@ export default function ListenPage(props: {
     >
       <Header darkMode={darkMode} />
 
-      <motion.div
-        className="relative z-10"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <AudioPlayer
-          darkMode={darkMode}
-          songUrl={songUrl}
-          songName={songName}
-        />
-      </motion.div>
+      <AudioPlayer darkMode={darkMode} songUrl={songUrl} songName={songName} />
 
-      <motion.footer
-        className={`mt-8 text-center ${
-          darkMode ? "text-gray-400" : "text-gray-500"
-        } text-sm relative z-10`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        &copy; 2024 SoundShare. All rights reserved.
-      </motion.footer>
-
+      <Footer darkMode={darkMode} />
       <ThemeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
     </main>
   );
