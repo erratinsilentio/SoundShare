@@ -1,5 +1,6 @@
 "use client";
 import { UploadButton } from "@/app/utils/uploadthing";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Music, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import {
 import { motion } from "framer-motion";
 
 export default function Home() {
+  const router = useRouter();
   const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function Home() {
   return (
     <main
       className={`min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300 ${
-        darkMode ? "dark bg-gray-900" : "bg-white"
+        darkMode ? "dark bg-zinc-900" : "bg-white"
       }`}
     >
       <motion.div
@@ -69,7 +71,7 @@ export default function Home() {
       >
         <Card
           className={`w-full max-w-md ${
-            darkMode ? "bg-gray-800 text-white" : ""
+            darkMode ? "bg-zinc-800 text-white" : ""
           }`}
         >
           <CardHeader className="text-center sm:text-left">
@@ -91,12 +93,14 @@ export default function Home() {
                 endpoint="imageUploader"
                 onClientUploadComplete={(res) => {
                   // Do something with the response
-                  console.log("Files: ", res);
-                  alert("Upload Completed");
+                  console.log("Files: ", res[0]);
+                  router.push(`/listen?key=${res[0].key}&name=${res[0].name}`);
                 }}
                 onUploadError={(error: Error) => {
                   // Do something with the error.
-                  alert(`ERROR! ${error.message}`);
+                  alert(
+                    `****! Looks like there was an error with uploading your track: ${error.message}`
+                  );
                 }}
               />
             </div>
