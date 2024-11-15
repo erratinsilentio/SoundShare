@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export const Footer = ({ darkMode }: { darkMode: boolean }) => {
+export const Footer = ({ darkMode = true }: { darkMode: boolean }) => {
   return (
     <motion.footer
       className={`mt-8 text-center ${

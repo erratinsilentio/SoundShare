@@ -8,7 +8,7 @@ interface ShareLinkProps {
   shareUrl: string;
 }
 
-export const ShareLink = ({ darkMode, shareUrl }: ShareLinkProps) => {
+export const ShareLink = ({ darkMode = true, shareUrl }: ShareLinkProps) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {

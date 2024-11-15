@@ -13,7 +13,7 @@ export const AudioWaveform = ({
   audioBuffer,
   currentTime,
   duration,
-  darkMode,
+  darkMode = true,
   isTrackLoaded,
   onPositionChange,
 }: AudioWaveformProps) => {

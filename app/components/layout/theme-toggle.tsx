@@ -6,7 +6,10 @@ interface ThemeToggleProps {
   onToggle: () => void;
 }
 
-export const ThemeToggle = ({ darkMode, onToggle }: ThemeToggleProps) => (
+export const ThemeToggle = ({
+  darkMode = true,
+  onToggle,
+}: ThemeToggleProps) => (
   <Button
     className={`fixed top-4 right-4 p-2 rounded-full ${
       darkMode ? "bg-gray-700 text-yellow-300" : "bg-gray-200 text-gray-800"

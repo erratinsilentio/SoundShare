@@ -19,7 +19,7 @@ interface AudioPlayerProps {
 }
 
 export const AudioPlayer = ({
-  darkMode,
+  darkMode = true,
   songUrl,
   songName,
 }: AudioPlayerProps) => {

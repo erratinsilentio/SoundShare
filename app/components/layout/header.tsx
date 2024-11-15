@@ -5,7 +5,7 @@ interface HeaderProps {
   darkMode: boolean;
 }
 
-export const Header = ({ darkMode }: HeaderProps) => (
+export const Header = ({ darkMode = true }: HeaderProps) => (
   <motion.div
     className="text-center mb-8 relative z-10"
     initial={{ opacity: 0, y: 50 }}

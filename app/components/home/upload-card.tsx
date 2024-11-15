@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export const UploadCard = ({ darkMode }: { darkMode: boolean }) => {
+export const UploadCard = ({ darkMode = true }: { darkMode: boolean }) => {
   const router = useRouter();
 
   return (
