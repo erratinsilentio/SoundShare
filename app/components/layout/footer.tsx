@@ -12,7 +12,11 @@ export const Footer = ({ darkMode = true }: { darkMode: boolean }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-      &copy; 2024 SoundShare. All rights reserved.
+      &copy; 2024{" "}
+      <a href="https://github.com/erratinsilentio/soundshare" target="_blank">
+        SoundShare
+      </a>
+      . All rights reserved.
     </motion.footer>
   );
 };
