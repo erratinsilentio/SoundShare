@@ -1,6 +1,61 @@
-# SoundShare - Music File Sharing App
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=140px src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3R3Nml0aXo4OWx5a285MmlmcjYzMHVsaWZ5cHJwaDZqYWd4YmR4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/elzCnIQAjQMWA/giphy.gif" alt="Project logo"></a>
+</p>
+
+<h3 align="center">SoundShare</h3>
+<p align="center" style="color: #000000">
+    <a href="http://soundshare.live/">
+    🔥 Live Deployment 🔥
+    </a>
+</p>
+
+<div align="center">
+
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/erratinsilentio/soundshare/pulls)
+
+<!-- [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE) -->
+
+</div>
+
+---
+
+## 📝 Table of Contents
+
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Clone the repository](#clone-the-repository)
+  - [Install dependencies](#install-dependencies)
+  - [Set up environment variables](#set-up-environment-variables)
+  - [Start the development server](#start-the-development-server)
+- [Usage](#usage)
+  - [Upload a Music File](#upload-a-music-file)
+  - [Get the Shareable Link](#get-the-shareable-link)
+  - [Share the Link](#share-the-link)
+- [Design & Animations](#design--animations)
+- [Components](#components)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+# SoundShare
+
+### About
 
 **SoundShare** is a simple web app built with Next.js that allows users to upload music files and quickly generate a shareable link to the file. The app leverages modern web technologies to provide a clean and smooth experience for uploading and sharing music.
+
+> Application is still in development and I have a few features in my mind that would be a good idea to implement, such as:
+>
+> - Shortened URL
+> - Authentication
+> - Upload History
+> - Version Control
 
 ### Features
 
@@ -108,7 +163,7 @@ You can deploy SoundShare using platforms such as Vercel, Netlify, or any platfo
 3. Create a new project and import your GitHub repository.
 4. Vercel will automatically detect that it’s a Next.js project and deploy it.
 
-Once deployed, make sure to set the same environment variables (`UPLOADTHING_TOKEN`) in your Vercel project settings.
+> Once deployed, make sure to set the same environment variables (`UPLOADTHING_TOKEN`) in your Vercel project settings.
 
 ## Contributing
 
