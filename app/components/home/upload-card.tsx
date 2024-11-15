@@ -53,12 +53,10 @@ export const UploadCard = ({
               }}
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
-                // Do something with the response
                 setData({ key: res[0].key, name: res[0].name });
                 setIsUploaded(true);
               }}
               onUploadError={(error: Error) => {
-                // Do something with the error.
                 alert(
                   `****! Looks like there was an error with uploading your track: ${error.message}`
                 );
