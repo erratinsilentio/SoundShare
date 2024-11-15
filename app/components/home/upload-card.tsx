@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { UploadButton } from "@/app/utils/uploadthing";
 import {
   Card,
@@ -9,10 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Dispatch, SetStateAction } from "react";
 
-export const UploadCard = ({ darkMode = true }: { darkMode: boolean }) => {
-  const router = useRouter();
+interface UploadCardProps {
+  darkMode: boolean;
+  setIsUploaded: Dispatch<SetStateAction<boolean>>;
+  setData: Dispatch<
+    SetStateAction<{ key: string; name: string } | null | undefined>
+  >;
+}
 
+export const UploadCard = ({
+  darkMode = true,
+  setIsUploaded,
+  setData,
+}: UploadCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -44,8 +54,8 @@ export const UploadCard = ({ darkMode = true }: { darkMode: boolean }) => {
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 // Do something with the response
-                console.log("Files: ", res[0]);
-                router.push(`/listen?key=${res[0].key}&name=${res[0].name}`);
+                setData({ key: res[0].key, name: res[0].name });
+                setIsUploaded(true);
               }}
               onUploadError={(error: Error) => {
                 // Do something with the error.
