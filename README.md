@@ -1,13 +1,13 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=140px src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3R3Nml0aXo4OWx5a285MmlmcjYzMHVsaWZ5cHJwaDZqYWd4YmR4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/elzCnIQAjQMWA/giphy.gif" alt="Project logo"></a>
+ <img width=200px height=120px src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWJmaXMyMW8wMXA0aTdqejlqNWhjbDlsdHI2NDFjeXVpcnp3Z2ZrNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vybWlRniCXzZC/giphy.gif" alt="Project logo"></a>
 </p>
 
 <h3 align="center">SoundShare</h3>
 <p align="center" style="color: #000000">
-    <a href="http://soundshare.live/">
-    🔥 Live Deployment 🔥
-    </a>
+  <a href="http://soundshare.live/">
+    <img src="https://img.shields.io/badge/live_website-000?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Website"/>
+  </a>
 </p>
 
 <div align="center">
