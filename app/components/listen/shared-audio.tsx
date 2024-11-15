@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,18 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AudioWaveform } from "./audio-waveform";
-import { ShareLink } from "./share-link";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { AudioWaveform } from "../home/audio-waveform";
+import { ShareLink } from "../home/share-link";
 
 interface AudioPlayerProps {
   darkMode: boolean;
   songUrl: string;
   songName: string | null;
-  shareUrl?: string;
+  shareUrl: string;
 }
 
-export const AudioPlayer = ({
+export const SharedAudio = ({
   darkMode = true,
   songUrl,
   songName,
@@ -31,6 +33,14 @@ export const AudioPlayer = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.has("key")) {
+      setIsTrackLoaded(true);
+      console.log(isTrackLoaded);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const context = new (window.AudioContext ||

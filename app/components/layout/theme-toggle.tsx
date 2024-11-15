@@ -11,7 +11,7 @@ export const ThemeToggle = ({
   onToggle,
 }: ThemeToggleProps) => (
   <Button
-    className={`fixed top-4 right-4 p-2 rounded-full ${
+    className={`fixed top-4 right-4 p-2 rounded-full px-3 ${
       darkMode ? "bg-gray-700 text-yellow-300" : "bg-gray-200 text-gray-800"
     } z-20`}
     onClick={onToggle}

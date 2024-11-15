@@ -5,6 +5,7 @@ import { Footer } from "../layout/footer";
 import { Header } from "../layout/header";
 import { UploadCard } from "./upload-card";
 import { AudioPlayer } from "./audio-player";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(true);
@@ -15,12 +16,7 @@ export default function Home() {
 
   const songUrl = `https://utfs.io/f/${data?.key}`;
   const songName = data?.name || "Untitled";
-
-  useEffect(() => {
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(isDarkMode);
-    document.documentElement.classList.toggle("dark", isDarkMode);
-  }, []);
+  const shareUrl = `http://localhost:3000/listen?key=${data?.key}&name=${songName}`;
 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
@@ -47,8 +43,10 @@ export default function Home() {
           darkMode={darkMode}
           songUrl={songUrl}
           songName={songName}
+          shareUrl={shareUrl}
         />
       )}
+
       <Footer darkMode={darkMode} />
       <ThemeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
     </main>
