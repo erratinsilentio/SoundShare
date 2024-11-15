@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Header } from "./header";
@@ -40,20 +40,18 @@ export default function ListenPage(props: {
     >
       <Header darkMode={darkMode} />
 
-      <Suspense>
-        <motion.div
-          className="relative z-10"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <AudioPlayer
-            darkMode={darkMode}
-            songUrl={songUrl}
-            songName={songName}
-          />
-        </motion.div>
-      </Suspense>
+      <motion.div
+        className="relative z-10"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <AudioPlayer
+          darkMode={darkMode}
+          songUrl={songUrl}
+          songName={songName}
+        />
+      </motion.div>
 
       <motion.footer
         className={`mt-8 text-center ${
