@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Suspense } from "react";
 import LoadingPage from "./loading";
+import { TRPCProvider } from "@/trpc/client";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased edges`}
       >
-        <Suspense fallback={<LoadingPage />}>{children}</Suspense>
+        <TRPCProvider>
+          <Suspense fallback={<LoadingPage />}>{children}</Suspense>
+        </TRPCProvider>
       </body>
     </html>
   );
