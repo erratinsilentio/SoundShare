@@ -1,0 +1,10 @@
+{
+    "git": {
+      "deploymentEnabled": {
+        "main": true,
+        "develop": false,
+        "feature/listen": false,
+        "feature/shorturl": false
+      }
+    }
+  }
