@@ -2,8 +2,9 @@
     "git": {
       "deploymentEnabled": {
         "main": true,
-        "development": false,
-        "preview": false
+        "develop": false,
+        "feature/listen": false,
+        "feature/shorturl": false
       }
     }
   }
