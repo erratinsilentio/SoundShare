@@ -300,12 +300,12 @@ export default function SharePage() {
                   : "0:00 / 0:00"}
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 gap-4 pr-6">
               <Select
                 onValueChange={handleVersionChange}
                 value={currentVersion?.key}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select version" />
                 </SelectTrigger>
                 <SelectContent>
@@ -316,36 +316,40 @@ export default function SharePage() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button onClick={handleDownload} disabled={!currentVersion}>
-                <Download className="mr-2 h-4 w-4" /> Download
-              </Button>
-              <UploadButton
-                content={{
-                  button({ ready }) {
-                    if (ready)
-                      return (
-                        <Button className="flex flex-row gap-2 w-[300px] justify-center items-center">
-                          <Upload className="mr-2 h-4 w-4" /> Upload New Version
-                        </Button>
-                      );
-                  },
-                }}
-                appearance={{
-                  allowedContent: "hidden",
-                  button: "w-[200px] border-white bg-transparent",
-                }}
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  // setData({ key: res[0].key, name: res[0].name });
-                  // setIsUploaded(true);
-                  console.log("good");
-                }}
-                onUploadError={(error: Error) => {
-                  alert(
-                    `****! Looks like there was an error with uploading your track: ${error.message}`
-                  );
-                }}
-              />
+              <div className="w-1/2 flex flex-row items-center justify-center gap-2">
+                {" "}
+                <Button onClick={handleDownload} disabled={!currentVersion}>
+                  <Download className="mr-2 h-4 w-4" /> Download
+                </Button>
+                <UploadButton
+                  content={{
+                    button({ ready }) {
+                      if (ready)
+                        return (
+                          <span className="flex flex-row gap-2 w-[300px] justify-center items-center">
+                            <Upload className="mr-2 h-4 w-4" /> Upload New
+                            Version
+                          </span>
+                        );
+                    },
+                  }}
+                  appearance={{
+                    allowedContent: "hidden",
+                    button: "w-[200px] border-white bg-transparent",
+                  }}
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    // setData({ key: res[0].key, name: res[0].name });
+                    // setIsUploaded(true);
+                    console.log("good");
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(
+                      `****! Looks like there was an error with uploading your track: ${error.message}`
+                    );
+                  }}
+                />
+              </div>
             </div>
             <div className="flex items-center space-x-2">
               <Input

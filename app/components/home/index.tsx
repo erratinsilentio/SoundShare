@@ -1,11 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ThemeToggle } from "../layout/theme-toggle";
 import { Footer } from "../layout/footer";
 import { Header } from "../layout/header";
 import { UploadCard } from "./upload-card";
 import { AudioPlayer } from "./audio-player";
-import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(true);
