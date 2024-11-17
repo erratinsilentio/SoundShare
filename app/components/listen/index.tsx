@@ -341,6 +341,14 @@ export default function SharePage() {
                   onClientUploadComplete={(res) => {
                     // setData({ key: res[0].key, name: res[0].name });
                     // setIsUploaded(true);
+                    setVersions([
+                      ...versions,
+                      {
+                        key: res[0].key,
+                        name: res[0].name,
+                        url: `https://utfs.io/f/${res[0].key}`,
+                      },
+                    ]);
                     console.log("good");
                   }}
                   onUploadError={(error: Error) => {
