@@ -11,9 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Footer } from "../layout/footer";
-import { ThemeToggle } from "../layout/theme-toggle";
-import { Header } from "../layout/header";
 import { useSearchParams } from "next/navigation";
 import VersionSelect from "./version-select";
 import PlayTime from "./play-time";
@@ -35,7 +32,6 @@ export default function SharePage() {
   );
 
   const containerRef = useRef(null);
-  const [urlIndex, setUrlIndex] = useState(0);
 
   const params = useSearchParams();
   const currentName = params.get("name");
@@ -139,13 +135,6 @@ export default function SharePage() {
     wavesurfer && wavesurfer.playPause();
   }, [wavesurfer]);
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    $darkMode.set(!$darkMode.get());
-    localStorage.setItem("darkMode", newDarkMode.toString());
-    document.documentElement.classList.toggle("dark", newDarkMode);
-  };
-
   const handleVersionChange = (versionId: string) => {
     const newVersion = versions.find((v) => v.key === versionId);
     if (newVersion) {
@@ -178,70 +167,59 @@ export default function SharePage() {
   };
 
   return (
-    <main
-      className={`min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300 ${
-        darkMode ? "dark bg-zinc-900" : "bg-white"
-      } overflow-hidden relative`}
+    <motion.div
+      className="relative z-10 w-full max-w-2xl"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
     >
-      {/* HEADER */}
-      <Header darkMode={darkMode} />
-      <motion.div
-        className="relative z-10 w-full max-w-2xl"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+      <Card
+        className={`${
+          darkMode
+            ? "bg-zinc-800 text-white"
+            : "bg-gradient-to-r from-indigo-50 via-white to-indigo-50 border-indigo-100"
+        }`}
       >
-        <Card
-          className={`${
-            darkMode
-              ? "bg-zinc-800 text-white"
-              : "bg-gradient-to-r from-indigo-50 via-white to-indigo-50 border-indigo-100"
-          }`}
-        >
-          <CardHeader>
-            <CardTitle>
-              {currentVersion ? currentVersion.name : "No Track Selected"}
-            </CardTitle>
-            <CardDescription className={darkMode ? "text-gray-300" : ""}>
-              Select a track to play
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* WAVEFORM */}
-            <div ref={containerRef} className="pt-4 pb-2"></div>
-            {/* PLAY BUTTON */}
-            <PlayTime
-              darkMode={darkMode}
-              isPlaying={isPlaying}
+        <CardHeader>
+          <CardTitle>
+            {currentVersion ? currentVersion.name : "No Track Selected"}
+          </CardTitle>
+          <CardDescription className={darkMode ? "text-gray-300" : ""}>
+            Select a track to play
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* WAVEFORM */}
+          <div ref={containerRef} className="pt-4 pb-2"></div>
+          {/* PLAY BUTTON */}
+          <PlayTime
+            darkMode={darkMode}
+            isPlaying={isPlaying}
+            currentVersion={currentVersion}
+            onPlayPause={onPlayPause}
+            currentTime={currentTime}
+            duration={duration}
+          />
+          <section className="flex items-center space-x-2 gap-4 pr-6">
+            {/* CURRENT VERSION SELECT */}
+            <VersionSelect
               currentVersion={currentVersion}
-              onPlayPause={onPlayPause}
-              currentTime={currentTime}
-              duration={duration}
+              versions={versions}
+              handleVersionChange={handleVersionChange}
             />
-            <div className="flex items-center space-x-2 gap-4 pr-6">
-              {/* CURRENT VERSION SELECT */}
-              <VersionSelect
-                currentVersion={currentVersion}
-                versions={versions}
-                handleVersionChange={handleVersionChange}
-              />
-              {/* DOWNLOAD AND UPLOAD BUTTONS */}
-              <DownloadUploadButtons
-                darkMode={darkMode}
-                setVersions={setVersions}
-                versions={versions}
-                currentVersion={currentVersion}
-                handleDownload={handleDownload}
-              />
-            </div>
-            {/* COPY TO CLIPBOARD */}
-            <Clipboard darkMode={darkMode} currentVersion={currentVersion} />
-          </CardContent>
-        </Card>
-      </motion.div>
-      {/* FOOTER AND TOGGLE BUTTON */}
-      <Footer darkMode={darkMode} />
-      <ThemeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
-    </main>
+            {/* DOWNLOAD AND UPLOAD BUTTONS */}
+            <DownloadUploadButtons
+              darkMode={darkMode}
+              setVersions={setVersions}
+              versions={versions}
+              currentVersion={currentVersion}
+              handleDownload={handleDownload}
+            />
+          </section>
+          {/* COPY TO CLIPBOARD */}
+          <Clipboard darkMode={darkMode} currentVersion={currentVersion} />
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

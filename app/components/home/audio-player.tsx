@@ -10,20 +10,21 @@ import {
 import { AudioWaveform } from "./audio-waveform";
 import { ShareLink } from "./share-link";
 import { motion } from "framer-motion";
+import { useStore } from "@nanostores/react";
+import { $darkMode } from "@/store/store";
 
 interface AudioPlayerProps {
-  darkMode: boolean;
   songUrl: string;
   songName: string | null;
   shareUrl?: string;
 }
 
 export const AudioPlayer = ({
-  darkMode = true,
   songUrl,
   songName,
   shareUrl,
 }: AudioPlayerProps) => {
+  const darkMode = useStore($darkMode);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -143,7 +144,7 @@ export const AudioPlayer = ({
                 : "0:00 / 0:00"}
             </div>
           </div>
-          <ShareLink darkMode={darkMode} shareUrl={shareUrl} />
+          <ShareLink shareUrl={shareUrl} />
         </CardContent>
       </Card>
     </motion.div>

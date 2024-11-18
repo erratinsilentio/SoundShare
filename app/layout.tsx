@@ -4,6 +4,10 @@ import { Suspense } from "react";
 import LoadingPage from "./loading";
 import { TRPCProvider } from "@/trpc/client";
 import { Anybody } from "next/font/google";
+import { Footer } from "./components/layout/footer";
+import { ThemeToggle } from "./components/layout/theme-toggle";
+import { MainWrapper } from "./components/layout/main-wrapper";
+import { Header } from "./components/layout/header";
 
 const anybody = Anybody({ subsets: ["latin"] });
 
@@ -19,9 +23,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${anybody.className} antialiased edges`}>
+      <body className={`${anybody.className} antialiased`}>
         <TRPCProvider>
-          <Suspense fallback={<LoadingPage />}>{children}</Suspense>
+          <Suspense fallback={<LoadingPage />}>
+            <MainWrapper>
+              <Header />
+              {children}
+              <Footer />
+              <ThemeToggle />
+            </MainWrapper>
+          </Suspense>
         </TRPCProvider>
       </body>
     </html>

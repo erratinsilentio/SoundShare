@@ -9,20 +9,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Dispatch, SetStateAction } from "react";
+import { useStore } from "@nanostores/react";
+import { $darkMode } from "@/store/store";
 
 interface UploadCardProps {
-  darkMode: boolean;
   setIsUploaded: Dispatch<SetStateAction<boolean>>;
   setData: Dispatch<
     SetStateAction<{ key: string; name: string } | null | undefined>
   >;
 }
 
-export const UploadCard = ({
-  darkMode = true,
-  setIsUploaded,
-  setData,
-}: UploadCardProps) => {
+export const UploadCard = ({ setIsUploaded, setData }: UploadCardProps) => {
+  const darkMode = useStore($darkMode);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

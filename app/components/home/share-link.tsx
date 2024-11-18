@@ -1,15 +1,18 @@
+"use client";
 import { Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useStore } from "@nanostores/react";
+import { $darkMode } from "@/store/store";
 
 interface ShareLinkProps {
-  darkMode: boolean;
   shareUrl: string | undefined;
 }
 
-export const ShareLink = ({ darkMode = true, shareUrl }: ShareLinkProps) => {
+export const ShareLink = ({ shareUrl }: ShareLinkProps) => {
   const [copied, setCopied] = useState(false);
+  const darkMode = useStore($darkMode);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl || "");

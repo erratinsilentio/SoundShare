@@ -1,8 +1,12 @@
 "use client";
 
+import { $darkMode } from "@/store/store";
+import { useStore } from "@nanostores/react";
 import { motion } from "framer-motion";
 
-export const Footer = ({ darkMode = true }: { darkMode: boolean }) => {
+export const Footer = () => {
+  const darkMode = useStore($darkMode);
+
   return (
     <motion.footer
       className={`mt-8 text-center ${
