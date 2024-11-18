@@ -14,7 +14,7 @@ export const Header = ({ darkMode = true }: HeaderProps) => (
   >
     <div className="flex items-center justify-center mb-2">
       <Music
-        className={`h-8 w-8 ${
+        className={`h-9 w-9 ${
           darkMode ? "text-pink-400" : "text-pink-500"
         } mr-2`}
       />

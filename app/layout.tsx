@@ -1,23 +1,15 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { Suspense } from "react";
 import LoadingPage from "./loading";
 import { TRPCProvider } from "@/trpc/client";
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { Anybody } from "next/font/google";
+
+const anybody = Anybody({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SoundShare",
-  description: "Share your tracks fast",
+  description: "Share Music Fast",
 };
 
 export default function RootLayout({
@@ -27,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased edges`}
-      >
+      <body className={`${anybody.className} antialiased edges`}>
         <TRPCProvider>
           <Suspense fallback={<LoadingPage />}>{children}</Suspense>
         </TRPCProvider>
