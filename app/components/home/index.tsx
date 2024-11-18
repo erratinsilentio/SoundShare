@@ -5,9 +5,11 @@ import { Footer } from "../layout/footer";
 import { Header } from "../layout/header";
 import { UploadCard } from "./upload-card";
 import { AudioPlayer } from "./audio-player";
+import { $darkMode } from "@/store/store";
+import { useStore } from "@nanostores/react";
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = useStore($darkMode);
   const [isUploaded, setIsUploaded] = useState(false);
   const [data, setData] = useState<
     { key: string; name: string } | null | undefined
@@ -19,7 +21,7 @@ export default function Home() {
 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
+    $darkMode.set(!$darkMode.get());
     localStorage.setItem("darkMode", newDarkMode.toString());
     document.documentElement.classList.toggle("dark", newDarkMode);
   };
