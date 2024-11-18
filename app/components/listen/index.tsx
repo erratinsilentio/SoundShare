@@ -1,8 +1,8 @@
 "use client";
-
+import { useWavesurfer } from "@wavesurfer/react";
 import { UploadButton } from "@/app/utils/uploadthing";
-import { useState, useEffect, useRef } from "react";
-import { Music, Moon, Sun, Download, Upload, Copy, Check } from "lucide-react";
+import { useState, useCallback, useRef } from "react";
+import { Download, Upload, Copy, Check, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,8 +24,9 @@ import { Footer } from "../layout/footer";
 import { ThemeToggle } from "../layout/theme-toggle";
 import { Header } from "../layout/header";
 import { useSearchParams } from "next/navigation";
+import PlayButton from "./play-button";
 
-interface TrackVersion {
+export interface TrackVersion {
   key: string;
   name: string;
   url: string;
@@ -33,13 +34,15 @@ interface TrackVersion {
 
 export default function SharePage() {
   const [darkMode, setDarkMode] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [copied, setCopied] = useState(false);
   const [currentVersion, setCurrentVersion] = useState<TrackVersion | null>(
     null
   );
+
+  const containerRef = useRef(null);
+  const [urlIndex, setUrlIndex] = useState(0);
+
   const params = useSearchParams();
   const currentName = params.get("name");
   const currentKey = params.get("key");
@@ -57,71 +60,28 @@ export default function SharePage() {
       url: "/placeholder2.mp3",
     },
   ]);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
 
-  useEffect(() => {
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(isDarkMode);
-    document.documentElement.classList.toggle("dark", isDarkMode);
+  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
+    container: containerRef,
+    height: 100,
+    waveColor: "rgb(96, 165, 250)",
+    progressColor: "rgb(29, 78, 216)",
+    url: versions[0].url,
+  });
 
-    const context = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
-    setAudioContext(context);
-
-    setCurrentVersion(versions[0]);
-
-    return () => {
-      context.close();
-    };
+  const onUrlChange = useCallback(() => {
+    setUrlIndex((index) => (index + 1) % versions.length);
   }, []);
 
-  useEffect(() => {
-    if (audioContext && currentVersion) {
-      fetch(currentVersion.url)
-        .then((response) => response.arrayBuffer())
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
-        .then((buffer) => {
-          setAudioBuffer(buffer);
-          drawWaveform(buffer);
-        })
-        .catch((error) => {
-          console.error("Error loading audio:", error);
-          drawRandomWaveform();
-        });
-    }
-  }, [audioContext, currentVersion]);
+  const onPlayPause = useCallback(() => {
+    wavesurfer && wavesurfer.playPause();
+  }, [wavesurfer]);
 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
     localStorage.setItem("darkMode", newDarkMode.toString());
     document.documentElement.classList.toggle("dark", newDarkMode);
-  };
-
-  const togglePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
-    }
   };
 
   const formatTime = (time: number) => {
@@ -138,80 +98,10 @@ export default function SharePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const drawWaveform = (buffer: AudioBuffer) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const width = canvas.width;
-    const height = canvas.height;
-    const data = buffer.getChannelData(0);
-    const step = Math.ceil(data.length / width);
-    const amp = height / 2;
-
-    ctx.clearRect(0, 0, width, height);
-    ctx.beginPath();
-    ctx.moveTo(0, amp);
-
-    for (let i = 0; i < width; i++) {
-      let min = 1.0;
-      let max = -1.0;
-      for (let j = 0; j < step; j++) {
-        const datum = data[i * step + j];
-        if (datum < min) min = datum;
-        if (datum > max) max = datum;
-      }
-      ctx.lineTo(i, (1 + min) * amp);
-      ctx.lineTo(i, (1 + max) * amp);
-    }
-
-    ctx.strokeStyle = darkMode ? "#4B5563" : "#9CA3AF";
-    ctx.stroke();
-  };
-
-  const drawRandomWaveform = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const width = canvas.width;
-    const height = canvas.height;
-    const amp = height / 2;
-
-    ctx.clearRect(0, 0, width, height);
-    ctx.beginPath();
-    ctx.moveTo(0, amp);
-
-    for (let i = 0; i < width; i++) {
-      const y = Math.random() * height;
-      ctx.lineTo(i, y);
-    }
-
-    ctx.strokeStyle = darkMode ? "#4B5563" : "#9CA3AF";
-    ctx.stroke();
-  };
-
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas || !audioRef.current) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const clickPosition = x / canvas.width;
-
-    audioRef.current.currentTime = clickPosition * duration;
-  };
-
   const handleVersionChange = (versionId: string) => {
-    const newVersion = versions.find((v) => v.id === versionId);
+    const newVersion = versions.find((v) => v.key === versionId);
     if (newVersion) {
       setCurrentVersion(newVersion);
-      setIsPlaying(false);
-      setCurrentTime(0);
     }
   };
 
@@ -262,38 +152,16 @@ export default function SharePage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {currentVersion && (
-              <audio
-                ref={audioRef}
-                src={currentVersion.url}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata}
-              />
-            )}
-            <div className="relative">
-              <canvas
-                ref={canvasRef}
-                width={400}
-                height={100}
-                className="w-full cursor-pointer"
-                onClick={handleCanvasClick}
-              />
-              {currentVersion && (
-                <div
-                  className="absolute top-0 left-0 h-full bg-blue-500 opacity-30 pointer-events-none"
-                  style={{ width: `${(currentTime / duration) * 100}%` }}
-                />
-              )}
-            </div>
+            {/* WAVEFORM */}
+            <div ref={containerRef}></div>
+            {/* PLAY BUTTON */}
             <div className="flex justify-between items-center">
-              <Button
-                onClick={togglePlayPause}
-                disabled={!currentVersion}
-                className="px-4"
-                variant="outline"
-              >
-                {isPlaying ? "Pause" : "Play"}
-              </Button>
+              <PlayButton
+                isPlaying={isPlaying}
+                currentVersion={currentVersion}
+                onPlayPause={onPlayPause}
+              />
+              {/* SONG DURATION */}
               <div>
                 {currentVersion
                   ? `${formatTime(currentTime)} / ${formatTime(duration)}`
@@ -301,6 +169,7 @@ export default function SharePage() {
               </div>
             </div>
             <div className="flex items-center space-x-2 gap-4 pr-6">
+              {/* CURRENT VERSION SELECT */}
               <Select
                 onValueChange={handleVersionChange}
                 value={currentVersion?.key}
@@ -317,17 +186,22 @@ export default function SharePage() {
                 </SelectContent>
               </Select>
               <div className="w-1/2 flex flex-row items-center justify-center gap-2">
-                {" "}
+                {/* DOWNLOAD BUTTON */}
                 <Button onClick={handleDownload} disabled={!currentVersion}>
                   <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
+                {/* UPLOAD BUTTON */}
                 <UploadButton
                   content={{
                     button({ ready }) {
                       if (ready)
                         return (
-                          <span className="flex flex-row gap-2 w-[300px] justify-center items-center">
-                            <Upload className="mr-2 h-4 w-4" /> Upload New
+                          <span
+                            className={`flex flex-row gap-2 w-[300px] justify-center items-center ${
+                              darkMode ? "text-white" : "text-black"
+                            }`}
+                          >
+                            <Upload className="mr-1 h-4 w-4" /> Upload New
                             Version
                           </span>
                         );
@@ -335,12 +209,12 @@ export default function SharePage() {
                   }}
                   appearance={{
                     allowedContent: "hidden",
-                    button: "w-[200px] border-white bg-transparent",
+                    button: `w-[200px] border-white bg-transparent ${
+                      darkMode ? "text-white" : ""
+                    }`,
                   }}
                   endpoint="imageUploader"
                   onClientUploadComplete={(res) => {
-                    // setData({ key: res[0].key, name: res[0].name });
-                    // setIsUploaded(true);
                     setVersions([
                       ...versions,
                       {
@@ -359,6 +233,7 @@ export default function SharePage() {
                 />
               </div>
             </div>
+            {/* COPY TO CLIPBOARD */}
             <div className="flex items-center space-x-2">
               <Input
                 value={
