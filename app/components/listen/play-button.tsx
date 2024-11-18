@@ -1,19 +1,22 @@
+"use client";
 import { Play, Pause } from "lucide-react";
 import { TrackVersion } from ".";
+import { useStore } from "@nanostores/react";
+import { $darkMode } from "@/store/store";
 
 interface PlayButton {
   onPlayPause: () => void;
   currentVersion: TrackVersion | null;
   isPlaying: boolean;
-  darkMode: boolean;
 }
 
 export default function PlayButton({
   onPlayPause,
   currentVersion,
   isPlaying,
-  darkMode,
 }: PlayButton) {
+  const darkMode = useStore($darkMode);
+
   return (
     <button
       onClick={onPlayPause}

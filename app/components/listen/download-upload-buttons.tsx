@@ -5,9 +5,10 @@ import { TrackVersion } from ".";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import UploadNewVersionButton from "./upload-button";
+import { useStore } from "@nanostores/react";
+import { $darkMode } from "@/store/store";
 
 interface DownloadUploadButtonProps {
-  darkMode: boolean;
   setVersions: Dispatch<SetStateAction<TrackVersion[]>>;
   versions: TrackVersion[];
   currentVersion: TrackVersion | null;
@@ -15,12 +16,13 @@ interface DownloadUploadButtonProps {
 }
 
 const DownloadUploadButtons: FC<DownloadUploadButtonProps> = ({
-  darkMode,
   setVersions,
   versions,
   currentVersion,
   handleDownload,
 }) => {
+  const darkMode = useStore($darkMode);
+
   return (
     <div className="w-1/2 flex flex-row items-center justify-center gap-2">
       {/* DOWNLOAD BUTTON */}

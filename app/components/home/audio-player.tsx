@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -7,95 +6,78 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AudioWaveform } from "./audio-waveform";
 import { ShareLink } from "./share-link";
 import { motion } from "framer-motion";
 import { useStore } from "@nanostores/react";
 import { $darkMode } from "@/store/store";
+import PlayTime from "../listen/play-time";
+import { useAudioPlayer } from "@/app/utils/useAudioPlayer";
+import { TrackVersion } from "../listen";
 
 interface AudioPlayerProps {
+  songKey: string | undefined;
   songUrl: string;
   songName: string | null;
   shareUrl?: string;
 }
 
 export const AudioPlayer = ({
+  songKey,
   songUrl,
   songName,
   shareUrl,
 }: AudioPlayerProps) => {
+  const containerRef = useRef(null);
   const darkMode = useStore($darkMode);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isTrackLoaded, setIsTrackLoaded] = useState(true);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
+  const [currentVersion, setCurrentVersion] = useState<TrackVersion | null>({
+    key: songKey || "",
+    name: songName || "",
+    url: songUrl,
+  });
+
+  const [versions, setVersions] = useState<TrackVersion[]>([
+    {
+      key: currentVersion?.key || "",
+      name: currentVersion?.name || "",
+      url: currentVersion?.url || "",
+    },
+  ]);
+
+  const { wavesurfer, isPlaying, currentTime } = useAudioPlayer({
+    containerRef,
+    currentVersion,
+    versions,
+  });
+
+  const onPlayPause = useCallback(() => {
+    wavesurfer && wavesurfer.playPause();
+  }, [wavesurfer]);
 
   useEffect(() => {
-    const context = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
-    setAudioContext(context);
+    if (wavesurfer) {
+      const handleReady = () => {
+        setDuration(wavesurfer.getDuration());
+      };
 
-    return () => {
-      context.close();
-    };
-  }, []);
+      const handleLoading = () => {
+        setDuration(0);
+      };
 
-  useEffect(() => {
-    if (audioContext && audioRef.current) {
-      fetch(songUrl)
-        .then((response) => response.arrayBuffer())
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
-        .then((buffer) => {
-          setAudioBuffer(buffer);
-          setIsTrackLoaded(true);
-        })
-        .catch((error) => {
-          console.error("Error loading audio:", error);
-        });
+      wavesurfer.on("ready", handleReady);
+      wavesurfer.on("loading", handleLoading);
+
+      return () => {
+        wavesurfer.un("ready", handleReady);
+        wavesurfer.un("loading", handleLoading);
+      };
     }
-  }, [audioContext]);
-
-  const togglePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
-    }
-  };
-
-  const handlePositionChange = (newTime: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime;
-    }
-  };
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
+  }, [wavesurfer]);
 
   return (
     <motion.div
-      className="relative z-10"
+      className="relative z-10 w-full flex justify-center"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
@@ -114,35 +96,15 @@ export const AudioPlayer = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {isTrackLoaded && (
-            <audio
-              ref={audioRef}
-              src={songUrl}
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-            />
-          )}
-          <AudioWaveform
-            audioBuffer={audioBuffer}
-            currentTime={currentTime}
-            duration={duration}
-            darkMode={darkMode}
-            isTrackLoaded={isTrackLoaded}
-            onPositionChange={handlePositionChange}
-          />
+          <div ref={containerRef} className="pt-4 pb-2"></div>
           <div className="flex justify-between items-center">
-            <Button
-              onClick={togglePlayPause}
-              variant="outline"
-              disabled={!isTrackLoaded}
-            >
-              {isPlaying ? "Pause" : "Play"}
-            </Button>
-            <div>
-              {isTrackLoaded
-                ? `${formatTime(currentTime)} / ${formatTime(duration)}`
-                : "0:00 / 0:00"}
-            </div>
+            <PlayTime
+              isPlaying={isPlaying}
+              currentVersion={currentVersion}
+              onPlayPause={onPlayPause}
+              currentTime={currentTime}
+              duration={duration}
+            />
           </div>
           <ShareLink shareUrl={shareUrl} />
         </CardContent>

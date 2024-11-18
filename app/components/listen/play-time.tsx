@@ -3,7 +3,6 @@ import PlayButton from "./play-button";
 import { TrackVersion } from ".";
 
 interface PlayTimeProps {
-  darkMode: boolean;
   isPlaying: boolean;
   currentVersion: TrackVersion | null;
   onPlayPause: () => void;
@@ -12,7 +11,6 @@ interface PlayTimeProps {
 }
 
 const PlayTime: FC<PlayTimeProps> = ({
-  darkMode,
   isPlaying,
   currentVersion,
   onPlayPause,
@@ -26,9 +24,8 @@ const PlayTime: FC<PlayTimeProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center gap-4">
       <PlayButton
-        darkMode={darkMode}
         isPlaying={isPlaying}
         currentVersion={currentVersion}
         onPlayPause={onPlayPause}

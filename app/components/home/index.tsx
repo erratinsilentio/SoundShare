@@ -9,6 +9,7 @@ export default function Home() {
     { key: string; name: string } | null | undefined
   >(null);
 
+  const songKey = data?.key;
   const songUrl = `https://utfs.io/f/${data?.key}`;
   const songName = data?.name || "Untitled";
   const shareUrl = `http://localhost:3000/listen?key=${data?.key}&name=${songName}`;
@@ -19,6 +20,7 @@ export default function Home() {
         <UploadCard setIsUploaded={setIsUploaded} setData={setData} />
       ) : (
         <AudioPlayer
+          songKey={songKey}
           songUrl={songUrl}
           songName={songName}
           shareUrl={shareUrl}
