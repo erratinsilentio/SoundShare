@@ -1,8 +1,9 @@
 "use client";
+import Clipboard from "./clipboard";
 import { useWavesurfer } from "@wavesurfer/react";
 import { UploadButton } from "@/app/utils/uploadthing";
 import { useState, useCallback, useRef } from "react";
-import { Download, Upload, Copy, Check, Play, Pause } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,20 +12,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { Footer } from "../layout/footer";
 import { ThemeToggle } from "../layout/theme-toggle";
 import { Header } from "../layout/header";
 import { useSearchParams } from "next/navigation";
 import PlayButton from "./play-button";
+import VersionSelect from "./version-select";
+import PlayTime from "./play-time";
+import DownloadUploadButtons from "./download-upload-buttons";
 
 export interface TrackVersion {
   key: string;
@@ -35,7 +31,6 @@ export interface TrackVersion {
 export default function SharePage() {
   const [darkMode, setDarkMode] = useState(false);
   const [duration, setDuration] = useState(0);
-  const [copied, setCopied] = useState(false);
   const [currentVersion, setCurrentVersion] = useState<TrackVersion | null>(
     null
   );
@@ -82,20 +77,6 @@ export default function SharePage() {
     setDarkMode(newDarkMode);
     localStorage.setItem("darkMode", newDarkMode.toString());
     document.documentElement.classList.toggle("dark", newDarkMode);
-  };
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(
-      `https://soundshare.com/share/${currentVersion?.id}`
-    );
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleVersionChange = (versionId: string) => {
@@ -155,105 +136,32 @@ export default function SharePage() {
             {/* WAVEFORM */}
             <div ref={containerRef}></div>
             {/* PLAY BUTTON */}
-            <div className="flex justify-between items-center">
-              <PlayButton
-                isPlaying={isPlaying}
-                currentVersion={currentVersion}
-                onPlayPause={onPlayPause}
-              />
-              {/* SONG DURATION */}
-              <div>
-                {currentVersion
-                  ? `${formatTime(currentTime)} / ${formatTime(duration)}`
-                  : "0:00 / 0:00"}
-              </div>
-            </div>
+            <PlayTime
+              darkMode={darkMode}
+              isPlaying={isPlaying}
+              currentVersion={currentVersion}
+              onPlayPause={onPlayPause}
+              currentTime={currentTime}
+              duration={duration}
+            />
             <div className="flex items-center space-x-2 gap-4 pr-6">
               {/* CURRENT VERSION SELECT */}
-              <Select
-                onValueChange={handleVersionChange}
-                value={currentVersion?.key}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select version" />
-                </SelectTrigger>
-                <SelectContent>
-                  {versions.map((version) => (
-                    <SelectItem key={version.key} value={version.key}>
-                      {version.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="w-1/2 flex flex-row items-center justify-center gap-2">
-                {/* DOWNLOAD BUTTON */}
-                <Button onClick={handleDownload} disabled={!currentVersion}>
-                  <Download className="mr-2 h-4 w-4" /> Download
-                </Button>
-                {/* UPLOAD BUTTON */}
-                <UploadButton
-                  content={{
-                    button({ ready }) {
-                      if (ready)
-                        return (
-                          <span
-                            className={`flex flex-row gap-2 w-[300px] justify-center items-center ${
-                              darkMode ? "text-white" : "text-black"
-                            }`}
-                          >
-                            <Upload className="mr-1 h-4 w-4" /> Upload New
-                            Version
-                          </span>
-                        );
-                    },
-                  }}
-                  appearance={{
-                    allowedContent: "hidden",
-                    button: `w-[200px] border-white bg-transparent ${
-                      darkMode ? "text-white" : ""
-                    }`,
-                  }}
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    setVersions([
-                      ...versions,
-                      {
-                        key: res[0].key,
-                        name: res[0].name,
-                        url: `https://utfs.io/f/${res[0].key}`,
-                      },
-                    ]);
-                    console.log("good");
-                  }}
-                  onUploadError={(error: Error) => {
-                    alert(
-                      `****! Looks like there was an error with uploading your track: ${error.message}`
-                    );
-                  }}
-                />
-              </div>
+              <VersionSelect
+                currentVersion={currentVersion}
+                versions={versions}
+                handleVersionChange={handleVersionChange}
+              />
+              {/* DOWNLOAD AND UPLOAD BUTTONS */}
+              <DownloadUploadButtons
+                darkMode={darkMode}
+                setVersions={setVersions}
+                versions={versions}
+                currentVersion={currentVersion}
+                handleDownload={handleDownload}
+              />
             </div>
             {/* COPY TO CLIPBOARD */}
-            <div className="flex items-center space-x-2">
-              <Input
-                value={
-                  currentVersion
-                    ? `https://soundshare.com/share/${currentVersion.key}`
-                    : ""
-                }
-                readOnly
-                className={`flex-grow ${
-                  darkMode ? "bg-gray-700 text-white" : ""
-                }`}
-              />
-              <Button onClick={copyToClipboard} variant="outline" size="icon">
-                {copied ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
+            <Clipboard darkMode={darkMode} currentVersion={currentVersion} />
           </CardContent>
         </Card>
       </motion.div>
