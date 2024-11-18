@@ -5,14 +5,14 @@ import { Input } from "@/components/ui/input";
 
 interface ShareLinkProps {
   darkMode: boolean;
-  shareUrl: string;
+  shareUrl: string | undefined;
 }
 
 export const ShareLink = ({ darkMode = true, shareUrl }: ShareLinkProps) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(shareUrl);
+    navigator.clipboard.writeText(shareUrl || "");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

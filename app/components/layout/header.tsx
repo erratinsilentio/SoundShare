@@ -1,5 +1,6 @@
 import { Music } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface HeaderProps {
   darkMode: boolean;
@@ -12,7 +13,7 @@ export const Header = ({ darkMode = true }: HeaderProps) => (
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
   >
-    <div className="flex items-center justify-center mb-2">
+    <Link href={"/"} className="flex items-center justify-center mb-2">
       <Music
         className={`h-9 w-9 ${
           darkMode ? "text-pink-400" : "text-pink-500"
@@ -25,7 +26,7 @@ export const Header = ({ darkMode = true }: HeaderProps) => (
       >
         SoundShare
       </h1>
-    </div>
+    </Link>
     <p className={`${darkMode ? "text-gray-300" : "text-gray-600"}`}>
       Listen and share your music
     </p>

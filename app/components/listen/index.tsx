@@ -2,7 +2,7 @@
 import Clipboard from "./clipboard";
 import Hover from "wavesurfer.js/dist/plugins/hover.esm.js";
 import { useWavesurfer } from "@wavesurfer/react";
-import { useState, useCallback, useRef, useMemo } from "react";
+import { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -18,6 +18,8 @@ import { useSearchParams } from "next/navigation";
 import VersionSelect from "./version-select";
 import PlayTime from "./play-time";
 import DownloadUploadButtons from "./download-upload-buttons";
+import { useStore } from "@nanostores/react";
+import { $darkMode } from "@/store/store";
 
 export interface TrackVersion {
   key: string;
@@ -26,7 +28,7 @@ export interface TrackVersion {
 }
 
 export default function SharePage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const darkMode = useStore($darkMode);
   const [duration, setDuration] = useState(0);
   const [currentVersion, setCurrentVersion] = useState<TrackVersion | null>(
     null
@@ -47,9 +49,9 @@ export default function SharePage() {
       url: downloadUrl,
     },
     {
-      key: "2",
+      key: "MQITZdAV8rC2orzY2WmlDedOapBXvSlLn48yI90QfqKjt5Ez",
       name: "Remix",
-      url: "/placeholder2.mp3",
+      url: "https://utfs.io/f/MQITZdAV8rC2orzY2WmlDedOapBXvSlLn48yI90QfqKjt5Ez",
     },
   ]);
 
@@ -92,7 +94,7 @@ export default function SharePage() {
       height: 100,
       waveColor: darkMode ? "rgb(236, 72, 153, 0.9)" : "rgb(192, 38, 211)",
       progressColor: "rgb(29, 78, 216)",
-      url: versions[0].url,
+      url: currentVersion ? currentVersion.url : versions[0].url,
       plugins: [
         Hover.create({
           lineColor: "#1e3a8a",
@@ -104,15 +106,34 @@ export default function SharePage() {
       ],
       renderFunction,
     }),
-    [containerRef, renderFunction, versions]
+    [containerRef, renderFunction, currentVersion]
   );
 
   const { wavesurfer, isPlaying, currentTime } =
     useWavesurfer(waveSurferConfig);
 
-  const onUrlChange = useCallback(() => {
-    setUrlIndex((index) => (index + 1) % versions.length);
-  }, []);
+  // Add effect to handle duration updates
+  useEffect(() => {
+    if (wavesurfer) {
+      // Set initial duration when wavesurfer is ready
+      const handleReady = () => {
+        setDuration(wavesurfer.getDuration());
+      };
+
+      // Update duration when loading new audio
+      const handleLoading = () => {
+        setDuration(0); // Reset duration while loading
+      };
+
+      wavesurfer.on("ready", handleReady);
+      wavesurfer.on("loading", handleLoading);
+
+      return () => {
+        wavesurfer.un("ready", handleReady);
+        wavesurfer.un("loading", handleLoading);
+      };
+    }
+  }, [wavesurfer]);
 
   const onPlayPause = useCallback(() => {
     wavesurfer && wavesurfer.playPause();
@@ -120,7 +141,7 @@ export default function SharePage() {
 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
+    $darkMode.set(!$darkMode.get());
     localStorage.setItem("darkMode", newDarkMode.toString());
     document.documentElement.classList.toggle("dark", newDarkMode);
   };
@@ -162,6 +183,7 @@ export default function SharePage() {
         darkMode ? "dark bg-zinc-900" : "bg-white"
       } overflow-hidden relative`}
     >
+      {/* HEADER */}
       <Header darkMode={darkMode} />
       <motion.div
         className="relative z-10 w-full max-w-2xl"
@@ -217,7 +239,7 @@ export default function SharePage() {
           </CardContent>
         </Card>
       </motion.div>
-
+      {/* FOOTER AND TOGGLE BUTTON */}
       <Footer darkMode={darkMode} />
       <ThemeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
     </main>
