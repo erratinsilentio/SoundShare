@@ -27,11 +27,11 @@ export default function SharePage() {
   const darkMode = useStore($darkMode);
   const [duration, setDuration] = useState(0);
   const [currentVersion, setCurrentVersion] = useState<TrackVersion | null>(
-    null
+    null,
   );
 
   const containerRef = useRef(null);
-
+  // const [loading, setLoading] = useState(false);
   const params = useSearchParams();
   const currentName = params.get("name");
   const currentKey = params.get("key");

@@ -54,6 +54,7 @@
 > - Authentication
 > - Upload History
 > - Version Control
+> - More file types
 
 ### ⚛︎ Features
 
